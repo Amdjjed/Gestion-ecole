@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart';
+import 'all.dart';
+
+class Authentification extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[900],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(30, 150, 30, 0),
+          child: Center(
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.person_rounded,
+                    color: Colors.grey[400],
+                    size: 200,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: TextStyle(
+                      fontFamily: 'openSans',
+                      fontSize: 25,
+                    ),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.teal, width: 2),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(25),
+                        ),
+                      ),
+                      helperText: 'Votre nom d\'utilisateur.',
+                      helperStyle: TextStyle(
+                        fontFamily: 'merriWeather',
+                        color: Colors.teal,
+                        letterSpacing: 1.5,
+                      ),
+                      labelText: 'Username',
+                      labelStyle: TextStyle(
+                        fontFamily: 'openSans',
+                        letterSpacing: 1.5,
+                        fontSize: 20,
+                      ),
+                      suffixIcon: const Icon(
+                        Icons.person_rounded,
+                        color: Colors.teal,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    obscureText: true,
+                    style: TextStyle(
+                      fontFamily: 'openSans',
+                      fontSize: 25,
+                    ),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      suffixIcon: const Icon(
+                        Icons.lock_rounded,
+                        color: Colors.teal,
+                      ),
+                      helperText: 'Votre mot de passe.',
+                      helperStyle: TextStyle(
+                        fontFamily: 'merriWeather',
+                        color: Colors.teal,
+                        letterSpacing: 1.5,
+                      ),
+                      labelText: 'Mot De Passe',
+                      labelStyle: TextStyle(
+                        fontFamily: 'openSans',
+                        letterSpacing: 1.5,
+                        fontSize: 20,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: 200,
+                    height: 50,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Etats(),
+                          ),
+                        );
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'S\'AUTHENTIFIER',
+                            style: TextStyle(
+                              fontFamily: 'openSans',
+                              letterSpacing: 1.5,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Icon(
+                            Icons.login_rounded,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      color: Colors.teal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
