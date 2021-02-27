@@ -49,7 +49,12 @@ class Etudiant extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /*...*/
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AjoutEtudiant(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Inscription",

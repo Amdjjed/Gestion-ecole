@@ -48,9 +48,7 @@ class Etats extends StatelessWidget {
                     textColor: Colors.grey[200],
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
-                    onPressed: () {
-                      /*...*/
-                    },
+                    onPressed: () {},
                     child: Text(
                       "Certificat de scolarité",
                       style: TextStyle(

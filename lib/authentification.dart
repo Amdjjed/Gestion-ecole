@@ -1,6 +1,16 @@
+import 'package:flutter/services.dart';
+
 import 'all.dart';
 
-class Authentification extends StatelessWidget {
+class Authentification extends StatefulWidget {
+  @override
+  _AuthentificationState createState() => _AuthentificationState();
+}
+
+class _AuthentificationState extends State<Authentification> {
+  var _usernameController = TextEditingController();
+  var _password = TextEditingController();
+  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +31,7 @@ class Authentification extends StatelessWidget {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _usernameController,
                     style: TextStyle(
                       fontFamily: 'openSans',
                       fontSize: 25,
@@ -55,6 +66,7 @@ class Authentification extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    controller: _password,
                     obscureText: true,
                     style: TextStyle(
                       fontFamily: 'openSans',
@@ -94,12 +106,25 @@ class Authentification extends StatelessWidget {
                     height: 50,
                     child: FlatButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Etats(),
-                          ),
-                        );
+                        print('i:');
+                        print(i);
+                        if (_usernameController.text == 'admin' &&
+                            _password.text == 'admin') {
+                          _usernameController.text = '';
+                          _password.text = '';
+                          i = 0;
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Etats(),
+                            ),
+                          );
+                        }
+                        i++;
+                        if (i == 3) {
+                          i = 0;
+                          SystemNavigator.pop();
+                        }
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0),

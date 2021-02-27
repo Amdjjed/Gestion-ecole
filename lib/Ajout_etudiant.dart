@@ -210,7 +210,12 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /**... */
+                      Etudiant_ etd = new Etudiant_(
+                          int.parse(_matriculeController.text),
+                          _nomController.text,
+                          _prenomController.text,
+                          _sectionController.text,
+                          int.parse(_groupeController.text));
                     },
                     child: Text(
                       "Valider",

@@ -6,3 +6,4 @@ export 'module.dart';
 export 'Ajout_etudiant.dart';
 export 'package:flutter/material.dart';
 export 'menu.dart';
+export 'classes.dart';
