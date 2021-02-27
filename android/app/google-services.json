@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1093177202015",
+    "project_id": "tpsi-a9b54",
+    "storage_bucket": "tpsi-a9b54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093177202015:android:01fcda97053aa6805152ea",
+        "android_client_info": {
+          "package_name": "com.example.tp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093177202015-e2cm95t19rp7hjfb9i1t42el5pnr0ubp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASb1CpZ2VnA4Zd0gJeGD5T9yhvdDOq54g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093177202015-e2cm95t19rp7hjfb9i1t42el5pnr0ubp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
