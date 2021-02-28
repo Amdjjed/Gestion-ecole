@@ -1,18 +1,17 @@
 import 'all.dart';
 
-class MajModule extends StatefulWidget {
-  MajModule({this.app});
+class Notes extends StatefulWidget {
+  Notes({this.app});
   final FirebaseApp app;
   @override
-  _MajModuleState createState() => _MajModuleState();
+  _NotesState createState() => _NotesState();
 }
 
-class _MajModuleState extends State<MajModule> {
+class _NotesState extends State<Notes> {
   final referenceDatabase = FirebaseDatabase.instance;
   var _codeMController = TextEditingController();
-  var _libMController = TextEditingController();
-  var _speMController = TextEditingController();
-  var _coefController = TextEditingController();
+  var _matriculeController = TextEditingController();
+  var _noteController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final ref = referenceDatabase.reference();
@@ -21,7 +20,7 @@ class _MajModuleState extends State<MajModule> {
       drawer: Menu(),
       appBar: AppBar(
         title: Text(
-          'Modification module',
+          'Saisie de notes',
           style: TextStyle(
             fontFamily: 'openSans',
             color: Colors.white,
@@ -83,61 +82,8 @@ class _MajModuleState extends State<MajModule> {
                         ),
                       ),
                       SizedBox(height: 25),
-                      Center(
-                        child: SizedBox(
-                          width: 300,
-                          height: 50,
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            color: Colors.teal,
-                            textColor: Colors.grey[200],
-                            padding: EdgeInsets.all(10),
-                            splashColor: Colors.teal[100],
-                            onPressed: () async {
-                              DataSnapshot snapshot = await ref
-                                  .child('Modules/' + _codeMController.text)
-                                  .once();
-                              if (snapshot.value == null) {
-                                ShowToastComponent.showDialog(
-                                    'Le module n\'existe pas', context);
-                              } else {
-                                _libMController.text = (await ref
-                                        .child('Modules/' +
-                                            _codeMController.text +
-                                            '/libellé')
-                                        .once())
-                                    .value;
-                                _speMController.text = (await ref
-                                        .child('Modules/' +
-                                            _codeMController.text +
-                                            '/spécialité')
-                                        .once())
-                                    .value;
-                                _coefController.text = (await ref
-                                        .child('Modules/' +
-                                            _codeMController.text +
-                                            '/coefficient')
-                                        .once())
-                                    .value;
-                              }
-                            },
-                            child: Text(
-                              "Chercher",
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontFamily: 'openSans',
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 25),
                       TextFormField(
-                        controller: _libMController,
+                        controller: _matriculeController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -152,7 +98,7 @@ class _MajModuleState extends State<MajModule> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Libellé module',
+                          labelText: 'matricule',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -167,7 +113,7 @@ class _MajModuleState extends State<MajModule> {
                       ),
                       SizedBox(height: 25),
                       TextFormField(
-                        controller: _coefController,
+                        controller: _noteController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -182,37 +128,7 @@ class _MajModuleState extends State<MajModule> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Coefficient',
-                          labelStyle: TextStyle(
-                            fontFamily: 'openSans',
-                            letterSpacing: 1.5,
-                            fontSize: 20,
-                          ),
-                          suffixIcon: const Icon(
-                            Icons.person_rounded,
-                            color: Colors.teal,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 30),
-                        ),
-                      ),
-                      SizedBox(height: 25),
-                      TextFormField(
-                        controller: _speMController,
-                        style: TextStyle(
-                          fontFamily: 'openSans',
-                          fontSize: 25,
-                        ),
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.teal, width: 2),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25),
-                            ),
-                          ),
-                          labelText: 'Spécialité',
+                          labelText: 'Note',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -244,23 +160,50 @@ class _MajModuleState extends State<MajModule> {
                       splashColor: Colors.teal[100],
                       onPressed: () async {
                         PrimitiveWrapper data = new PrimitiveWrapper(0);
-                        await showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              BuildPopupDialog(context, data),
-                        );
-                        print(data.value);
-                        if (data.value == 1) {
-                          ref.child("Modules/" + _codeMController.text).set({
-                            'libellé': _libMController.text,
-                            'coefficient': _coefController.text,
-                            'spécialité': _speMController.text
-                          });
+                        DataSnapshot snapshot_module = await ref
+                            .child('Modules/' + _codeMController.text)
+                            .once();
+                        DataSnapshot snapshot_etd = await ref
+                            .child('Etudiants/' + _matriculeController.text)
+                            .once();
+                        DataSnapshot snapshot_note = await ref
+                            .child('Examen/' +
+                                _codeMController.text +
+                                '/' +
+                                _matriculeController.text)
+                            .once();
+                        if (snapshot_module.value == null) {
                           ShowToastComponent.showDialog(
-                              'Mise à jour faite avec succès', context);
+                              'Module n\'existe pas! ', context);
+                        } else if (snapshot_etd.value == null) {
+                          ShowToastComponent.showDialog(
+                              'Etudiant n\'existe pas', context);
+                        } else if (snapshot_note.value != null) {
+                          ShowToastComponent.showDialog(
+                              'L\'étudiant a déjà une note dans ce module',
+                              context);
                         } else {
-                          ShowToastComponent.showDialog(
-                              'Mise à jour annulée', context);
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                BuildPopupDialog(context, data),
+                          );
+                          print(data.value);
+                          if (data.value == 1) {
+                            ref
+                                .child("Examen/" +
+                                    _codeMController.text +
+                                    '/' +
+                                    _matriculeController.text)
+                                .set({
+                              'note': _noteController.text,
+                            });
+                            ShowToastComponent.showDialog(
+                                'Note saisie avec succès', context);
+                          } else {
+                            ShowToastComponent.showDialog(
+                                'Saisie de note annulée', context);
+                          }
                         }
                       },
                       child: Text(
