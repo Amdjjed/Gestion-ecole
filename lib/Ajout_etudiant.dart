@@ -1,11 +1,14 @@
 import 'all.dart';
 
 class AjoutEtudiant extends StatefulWidget {
+  AjoutEtudiant({this.app});
+  final FirebaseApp app;
   @override
   _AjoutEtudiantState createState() => _AjoutEtudiantState();
 }
 
 class _AjoutEtudiantState extends State<AjoutEtudiant> {
+  final referenceDatabase = FirebaseDatabase.instance;
   var _matriculeController = TextEditingController();
   var _nomController = TextEditingController();
   var _prenomController = TextEditingController();
@@ -13,6 +16,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
   var _groupeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final ref = referenceDatabase.reference();
     return Scaffold(
       backgroundColor: Colors.grey[850],
       drawer: Menu(),
@@ -209,13 +213,41 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                     textColor: Colors.grey[200],
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
-                    onPressed: () {
+                    onPressed: () async {
                       Etudiant_ etd = new Etudiant_(
                           int.parse(_matriculeController.text),
                           _nomController.text,
                           _prenomController.text,
                           _sectionController.text,
                           int.parse(_groupeController.text));
+                      DatabaseReference etudiant = ref
+                          .child("etudiants")
+                          .child(etd.matricule.toString());
+                      DataSnapshot snapshot = await ref
+                          .child('Etudiants/' + etd.matricule.toString())
+                          .once();
+                      if (snapshot.value != null) {
+                        ShowToastComponent.showDialog(
+                            'L\'etudiant existe deja', context);
+                      } else {
+                        PrimitiveWrapper data = new PrimitiveWrapper(0);
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              BuildPopupDialog(context, data),
+                        );
+                        print(data.value);
+                        if (data.value == 1) {
+                          ref
+                              .child("Etudiants/" + etd.matricule.toString())
+                              .set({
+                            'nom': etd.nom,
+                            'prenom': etd.prenom,
+                            'section': etd.codeS,
+                            'groupe': etd.groupe.toString()
+                          });
+                        }
+                      }
                     },
                     child: Text(
                       "Valider",

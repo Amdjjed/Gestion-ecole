@@ -31,3 +31,8 @@ class Examen_ {
     this.note = note;
   }
 }
+
+class PrimitiveWrapper {
+  int value;
+  PrimitiveWrapper(this.value);
+}
