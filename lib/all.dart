@@ -16,3 +16,4 @@ export 'maj_etudiant.dart';
 export 'Suprssion_etudiant.dart';
 export 'MAJ_module.dart';
 export 'Ajout_module.dart';
+export 'notes.dart';

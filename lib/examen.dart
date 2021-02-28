@@ -77,7 +77,8 @@ class Examen extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /*...*/
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Notes()));
                     },
                     child: Text(
                       "Saisie de notes",
