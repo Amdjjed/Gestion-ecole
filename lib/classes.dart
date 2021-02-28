@@ -13,11 +13,11 @@ class Etudiant_ {
 
 class Module_ {
   int coef;
-  String codeM, libelleM, code_ens;
-  Module_(String codeM, String libelleM, int coef, String code_ens) {
+  String codeM, libelleM, spe;
+  Module_(String codeM, String libelleM, int coef, String spe) {
     this.codeM = codeM;
     this.libelleM = libelleM;
-    this.code_ens = code_ens;
+    this.spe = spe;
     this.coef = coef;
   }
 }
@@ -30,4 +30,9 @@ class Examen_ {
     this.matricule = matricule;
     this.note = note;
   }
+}
+
+class PrimitiveWrapper {
+  int value;
+  PrimitiveWrapper(this.value);
 }

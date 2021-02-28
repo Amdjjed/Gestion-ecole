@@ -1,19 +1,18 @@
 import 'all.dart';
 
-class AjoutEtudiant extends StatefulWidget {
-  AjoutEtudiant({this.app});
+class AjoutModule extends StatefulWidget {
+  AjoutModule({this.app});
   final FirebaseApp app;
   @override
-  _AjoutEtudiantState createState() => _AjoutEtudiantState();
+  _AjoutModuleState createState() => _AjoutModuleState();
 }
 
-class _AjoutEtudiantState extends State<AjoutEtudiant> {
+class _AjoutModuleState extends State<AjoutModule> {
   final referenceDatabase = FirebaseDatabase.instance;
-  var _matriculeController = TextEditingController();
-  var _nomController = TextEditingController();
-  var _prenomController = TextEditingController();
-  var _sectionController = TextEditingController();
-  var _groupeController = TextEditingController();
+  var _codeMController = TextEditingController();
+  var _libMController = TextEditingController();
+  var _speMController = TextEditingController();
+  var _coefController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final ref = referenceDatabase.reference();
@@ -22,7 +21,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
       drawer: Menu(),
       appBar: AppBar(
         title: Text(
-          'Inscription',
+          'Nouveau module',
           style: TextStyle(
             fontFamily: 'openSans',
             color: Colors.white,
@@ -55,7 +54,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
-                        controller: _matriculeController,
+                        controller: _codeMController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -70,7 +69,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Matricule',
+                          labelText: 'Code Module',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -85,7 +84,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                       ),
                       SizedBox(height: 25),
                       TextFormField(
-                        controller: _nomController,
+                        controller: _libMController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -100,7 +99,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Nom',
+                          labelText: 'Libellé module',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -115,7 +114,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                       ),
                       SizedBox(height: 25),
                       TextFormField(
-                        controller: _prenomController,
+                        controller: _coefController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -130,7 +129,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Prénom',
+                          labelText: 'Coefficient',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -145,7 +144,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                       ),
                       SizedBox(height: 25),
                       TextFormField(
-                        controller: _sectionController,
+                        controller: _speMController,
                         style: TextStyle(
                           fontFamily: 'openSans',
                           fontSize: 25,
@@ -160,7 +159,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                               Radius.circular(25),
                             ),
                           ),
-                          labelText: 'Section',
+                          labelText: 'Spécialité',
                           labelStyle: TextStyle(
                             fontFamily: 'openSans',
                             letterSpacing: 1.5,
@@ -174,35 +173,6 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                         ),
                       ),
                       SizedBox(height: 25),
-                      TextFormField(
-                        controller: _groupeController,
-                        style: TextStyle(
-                          fontFamily: 'openSans',
-                          fontSize: 25,
-                        ),
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.teal, width: 2),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25),
-                            ),
-                          ),
-                          labelText: 'Groupe',
-                          labelStyle: TextStyle(
-                            fontFamily: 'openSans',
-                            letterSpacing: 1.5,
-                            fontSize: 20,
-                          ),
-                          suffixIcon: const Icon(
-                            Icons.person_rounded,
-                            color: Colors.teal,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 30),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -220,19 +190,12 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                       padding: EdgeInsets.all(10),
                       splashColor: Colors.teal[100],
                       onPressed: () async {
-                        Etudiant_ etd = new Etudiant_(
-                            int.parse(_matriculeController.text),
-                            _nomController.text,
-                            _prenomController.text,
-                            _sectionController.text,
-                            int.parse(_groupeController.text));
-
                         DataSnapshot snapshot = await ref
-                            .child('Etudiants/' + etd.matricule.toString())
+                            .child('Modules/' + _codeMController.text)
                             .once();
                         if (snapshot.value != null) {
                           ShowToastComponent.showDialog(
-                              'L\'etudiant existe deja', context);
+                              'Le module existe deja', context);
                         } else {
                           PrimitiveWrapper data = new PrimitiveWrapper(0);
                           await showDialog(
@@ -242,13 +205,10 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                           );
                           print(data.value);
                           if (data.value == 1) {
-                            ref
-                                .child("Etudiants/" + etd.matricule.toString())
-                                .set({
-                              'nom': etd.nom,
-                              'prenom': etd.prenom,
-                              'section': etd.codeS,
-                              'groupe': etd.groupe.toString()
+                            ref.child("Modules/" + _codeMController.text).set({
+                              'libellé': _libMController.text,
+                              'coefficient': _coefController.text,
+                              'spécialité': _speMController.text
                             });
                             ShowToastComponent.showDialog(
                                 'Ajout fait avec succès', context);
