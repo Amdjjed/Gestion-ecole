@@ -3,6 +3,18 @@ import 'all.dart';
 Widget BuildPopupDialog(BuildContext context, PrimitiveWrapper data) {
   return new AlertDialog(
     backgroundColor: Colors.grey[850],
+    titleTextStyle: TextStyle(
+      fontSize: 16.0,
+      fontFamily: 'openSans',
+      letterSpacing: 2,
+      color: Colors.white,
+    ),
+    contentTextStyle: TextStyle(
+      fontSize: 16.0,
+      fontFamily: 'openSans',
+      letterSpacing: 2,
+      color: Colors.white,
+    ),
     title: const Text(
       'CONFIRMATION',
       style: TextStyle(

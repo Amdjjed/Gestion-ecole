@@ -49,7 +49,7 @@ class Etudiant extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => AjoutEtudiant(),
@@ -82,7 +82,12 @@ class Etudiant extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /*...*/
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MajEtudiant(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Changement de groupe ou section",
@@ -110,7 +115,12 @@ class Etudiant extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /**... */
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SupressionEtudiant(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Départ d'un étudiant",

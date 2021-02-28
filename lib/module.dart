@@ -1,3 +1,5 @@
+import 'package:tp/Ajout_module.dart';
+
 import 'all.dart';
 
 class Module extends StatelessWidget {
@@ -49,7 +51,12 @@ class Module extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /*...*/
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AjoutModule(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Nouveau module",
@@ -77,7 +84,12 @@ class Module extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     splashColor: Colors.teal[100],
                     onPressed: () {
-                      /*...*/
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MajModule(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Modification du coefficient",

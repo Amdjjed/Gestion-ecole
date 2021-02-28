@@ -1,13 +1,13 @@
 import 'all.dart';
 
-class AjoutEtudiant extends StatefulWidget {
-  AjoutEtudiant({this.app});
+class MajEtudiant extends StatefulWidget {
+  MajEtudiant({this.app});
   final FirebaseApp app;
   @override
-  _AjoutEtudiantState createState() => _AjoutEtudiantState();
+  _MajEtudiantState createState() => _MajEtudiantState();
 }
 
-class _AjoutEtudiantState extends State<AjoutEtudiant> {
+class _MajEtudiantState extends State<MajEtudiant> {
   final referenceDatabase = FirebaseDatabase.instance;
   var _matriculeController = TextEditingController();
   var _nomController = TextEditingController();
@@ -22,7 +22,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
       drawer: Menu(),
       appBar: AppBar(
         title: Text(
-          'Inscription',
+          'Changement de section',
           style: TextStyle(
             fontFamily: 'openSans',
             color: Colors.white,
@@ -81,6 +81,66 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                             color: Colors.teal,
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 30),
+                        ),
+                      ),
+                      SizedBox(height: 25),
+                      Center(
+                        child: SizedBox(
+                          width: 300,
+                          height: 50,
+                          child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            color: Colors.teal,
+                            textColor: Colors.grey[200],
+                            padding: EdgeInsets.all(10),
+                            splashColor: Colors.teal[100],
+                            onPressed: () async {
+                              DataSnapshot snapshot = await ref
+                                  .child(
+                                      'Etudiants/' + _matriculeController.text)
+                                  .once();
+                              if (snapshot.value == null) {
+                                ShowToastComponent.showDialog(
+                                    'L\'etudiant n\'existe pas', context);
+                              } else {
+                                _nomController.text = (await ref
+                                        .child('Etudiants/' +
+                                            _matriculeController.text +
+                                            '/nom')
+                                        .once())
+                                    .value;
+                                _prenomController.text = (await ref
+                                        .child('Etudiants/' +
+                                            _matriculeController.text +
+                                            '/prenom')
+                                        .once())
+                                    .value;
+                                _sectionController.text = (await ref
+                                        .child('Etudiants/' +
+                                            _matriculeController.text +
+                                            '/section')
+                                        .once())
+                                    .value;
+                                _groupeController.text = (await ref
+                                        .child('Etudiants/' +
+                                            _matriculeController.text +
+                                            '/groupe')
+                                        .once())
+                                    .value;
+                              }
+                            },
+                            child: Text(
+                              "Chercher",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'openSans',
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 25),
@@ -227,35 +287,27 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                             _sectionController.text,
                             int.parse(_groupeController.text));
 
-                        DataSnapshot snapshot = await ref
-                            .child('Etudiants/' + etd.matricule.toString())
-                            .once();
-                        if (snapshot.value != null) {
+                        PrimitiveWrapper data = new PrimitiveWrapper(0);
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              BuildPopupDialog(context, data),
+                        );
+                        print(data.value);
+                        if (data.value == 1) {
+                          ref
+                              .child("Etudiants/" + etd.matricule.toString())
+                              .set({
+                            'nom': etd.nom,
+                            'prenom': etd.prenom,
+                            'section': etd.codeS,
+                            'groupe': etd.groupe.toString()
+                          });
                           ShowToastComponent.showDialog(
-                              'L\'etudiant existe deja', context);
+                              'Mise à jour faite avec succès', context);
                         } else {
-                          PrimitiveWrapper data = new PrimitiveWrapper(0);
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                BuildPopupDialog(context, data),
-                          );
-                          print(data.value);
-                          if (data.value == 1) {
-                            ref
-                                .child("Etudiants/" + etd.matricule.toString())
-                                .set({
-                              'nom': etd.nom,
-                              'prenom': etd.prenom,
-                              'section': etd.codeS,
-                              'groupe': etd.groupe.toString()
-                            });
-                            ShowToastComponent.showDialog(
-                                'Ajout fait avec succès', context);
-                          } else {
-                            ShowToastComponent.showDialog(
-                                'Ajout annulé', context);
-                          }
+                          ShowToastComponent.showDialog(
+                              'Mise à jour annulée', context);
                         }
                       },
                       child: Text(
@@ -270,6 +322,7 @@ class _AjoutEtudiantState extends State<AjoutEtudiant> {
                     ),
                   ),
                 ),
+                SizedBox(height: 150),
               ],
             ),
           ),

@@ -5,7 +5,7 @@ class ShowToastComponent {
     Toast.show(
       msg,
       context,
-      duration: Toast.LENGTH_SHORT,
+      duration: Toast.LENGTH_LONG,
       gravity: Toast.BOTTOM,
     );
   }
