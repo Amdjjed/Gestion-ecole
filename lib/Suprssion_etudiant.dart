@@ -14,6 +14,7 @@ class _SupressionEtudiantState extends State<SupressionEtudiant> {
   var _prenomController = TextEditingController();
   var _sectionController = TextEditingController();
   var _groupeController = TextEditingController();
+  PrimitiveWrapper cher = new PrimitiveWrapper(0);
   @override
   Widget build(BuildContext context) {
     final ref = referenceDatabase.reference();
@@ -105,6 +106,7 @@ class _SupressionEtudiantState extends State<SupressionEtudiant> {
                                 ShowToastComponent.showDialog(
                                     'L\'etudiant n\'existe pas', context);
                               } else {
+                                cher.value = 1;
                                 _nomController.text = (await ref
                                         .child('Etudiants/' +
                                             _matriculeController.text +
@@ -280,29 +282,40 @@ class _SupressionEtudiantState extends State<SupressionEtudiant> {
                       padding: EdgeInsets.all(10),
                       splashColor: Colors.teal[100],
                       onPressed: () async {
-                        Etudiant_ etd = new Etudiant_(
-                            int.parse(_matriculeController.text),
-                            _nomController.text,
-                            _prenomController.text,
-                            _sectionController.text,
-                            int.parse(_groupeController.text));
-
-                        PrimitiveWrapper data = new PrimitiveWrapper(0);
-                        await showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              BuildPopupDialog(context, data),
-                        );
-                        print(data.value);
-                        if (data.value == 1) {
-                          ref
-                              .child("Etudiants/" + etd.matricule.toString())
-                              .remove();
+                        if (cher.value == 0) {
                           ShowToastComponent.showDialog(
-                              'Suppression faite avec succès', context);
+                              "Vous devez chercher l'étudiant !", context);
                         } else {
-                          ShowToastComponent.showDialog(
-                              'Suppression annulée', context);
+                          Etudiant_ etd = new Etudiant_(
+                              int.parse(_matriculeController.text),
+                              _nomController.text,
+                              _prenomController.text,
+                              _sectionController.text,
+                              int.parse(_groupeController.text));
+
+                          PrimitiveWrapper data = new PrimitiveWrapper(0);
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                BuildPopupDialog(context, data),
+                          );
+                          print(data.value);
+                          if (data.value == 1) {
+                            ref
+                                .child("Etudiants/" + etd.matricule.toString())
+                                .remove();
+                            ShowToastComponent.showDialog(
+                                'Suppression faite avec succès', context);
+                            _matriculeController.text = "";
+                            _nomController.text = "";
+                            _prenomController.text = "";
+                            _sectionController.text = "";
+                            _groupeController.text = "";
+                            cher.value = 0;
+                          } else {
+                            ShowToastComponent.showDialog(
+                                'Suppression annulée', context);
+                          }
                         }
                       },
                       child: Text(

@@ -13,6 +13,8 @@ class _MajModuleState extends State<MajModule> {
   var _libMController = TextEditingController();
   var _speMController = TextEditingController();
   var _coefController = TextEditingController();
+  PrimitiveWrapper cher = new PrimitiveWrapper(0);
+  PrimitiveWrapper codeMtemp = new PrimitiveWrapper("");
   @override
   Widget build(BuildContext context) {
     final ref = referenceDatabase.reference();
@@ -103,6 +105,7 @@ class _MajModuleState extends State<MajModule> {
                                 ShowToastComponent.showDialog(
                                     'Le module n\'existe pas', context);
                               } else {
+                                codeMtemp.value = _codeMController.text;
                                 _libMController.text = (await ref
                                         .child('Modules/' +
                                             _codeMController.text +
@@ -121,6 +124,7 @@ class _MajModuleState extends State<MajModule> {
                                             '/coefficient')
                                         .once())
                                     .value;
+                                cher.value = 1;
                               }
                             },
                             child: Text(
@@ -243,24 +247,74 @@ class _MajModuleState extends State<MajModule> {
                       padding: EdgeInsets.all(10),
                       splashColor: Colors.teal[100],
                       onPressed: () async {
-                        PrimitiveWrapper data = new PrimitiveWrapper(0);
-                        await showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              BuildPopupDialog(context, data),
-                        );
-                        print(data.value);
-                        if (data.value == 1) {
-                          ref.child("Modules/" + _codeMController.text).set({
-                            'libellé': _libMController.text,
-                            'coefficient': _coefController.text,
-                            'spécialité': _speMController.text
-                          });
+                        if (cher.value == 0) {
                           ShowToastComponent.showDialog(
-                              'Mise à jour faite avec succès', context);
+                              "Vous devez chercher le module !", context);
                         } else {
-                          ShowToastComponent.showDialog(
-                              'Mise à jour annulée', context);
+                          if (codeMtemp.value == _codeMController.text) {
+                            PrimitiveWrapper data = new PrimitiveWrapper(0);
+                            await showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  BuildPopupDialog(context, data),
+                            );
+                            print(data.value);
+                            if (data.value == 1) {
+                              ref
+                                  .child("Modules/" + _codeMController.text)
+                                  .set({
+                                'libellé': _libMController.text,
+                                'coefficient': _coefController.text,
+                                'spécialité': _speMController.text
+                              });
+                              ref.child("Modules/" + codeMtemp.value).remove();
+                              ShowToastComponent.showDialog(
+                                  'Mise à jour faite avec succès', context);
+                              _codeMController.text = "";
+                              _libMController.text = "";
+                              _coefController.text = "";
+                              _speMController.text = "";
+                              cher.value = 0;
+                            } else {
+                              ShowToastComponent.showDialog(
+                                  'Mise à jour annulée', context);
+                            }
+                          } else {
+                            DataSnapshot snapshot = await ref
+                                .child('Modules/' + _codeMController.text)
+                                .once();
+                            if (snapshot.value != null) {
+                              ShowToastComponent.showDialog(
+                                  'Le module existe deja', context);
+                            } else {
+                              PrimitiveWrapper data = new PrimitiveWrapper(0);
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    BuildPopupDialog(context, data),
+                              );
+                              print(data.value);
+                              if (data.value == 1) {
+                                ref
+                                    .child("Modules/" + _codeMController.text)
+                                    .set({
+                                  'libellé': _libMController.text,
+                                  'coefficient': _coefController.text,
+                                  'spécialité': _speMController.text
+                                });
+                                ShowToastComponent.showDialog(
+                                    'Mise à jour faite avec succès', context);
+                                _codeMController.text = "";
+                                _libMController.text = "";
+                                _coefController.text = "";
+                                _speMController.text = "";
+                                cher.value = 0;
+                              } else {
+                                ShowToastComponent.showDialog(
+                                    'Mise à jour annulée', context);
+                              }
+                            }
+                          }
                         }
                       },
                       child: Text(

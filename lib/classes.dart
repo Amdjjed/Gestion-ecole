@@ -33,6 +33,6 @@ class Examen_ {
 }
 
 class PrimitiveWrapper {
-  int value;
+  var value;
   PrimitiveWrapper(this.value);
 }

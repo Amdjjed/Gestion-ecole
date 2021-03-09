@@ -119,6 +119,9 @@ class _AuthentificationState extends State<Authentification> {
                               builder: (context) => Etats(),
                             ),
                           );
+                        } else {
+                          ShowToastComponent.showDialog(
+                              "Mot de passe ou username incorrecte", context);
                         }
                         i++;
                         if (i == 3) {

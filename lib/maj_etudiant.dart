@@ -14,6 +14,8 @@ class _MajEtudiantState extends State<MajEtudiant> {
   var _prenomController = TextEditingController();
   var _sectionController = TextEditingController();
   var _groupeController = TextEditingController();
+  PrimitiveWrapper cher = new PrimitiveWrapper(0);
+  PrimitiveWrapper mattemp = new PrimitiveWrapper("");
   @override
   Widget build(BuildContext context) {
     final ref = referenceDatabase.reference();
@@ -111,6 +113,7 @@ class _MajEtudiantState extends State<MajEtudiant> {
                                             '/nom')
                                         .once())
                                     .value;
+                                mattemp.value = _matriculeController.text;
                                 _prenomController.text = (await ref
                                         .child('Etudiants/' +
                                             _matriculeController.text +
@@ -130,6 +133,7 @@ class _MajEtudiantState extends State<MajEtudiant> {
                                         .once())
                                     .value;
                               }
+                              cher.value = 1;
                             },
                             child: Text(
                               "Chercher",
@@ -280,34 +284,97 @@ class _MajEtudiantState extends State<MajEtudiant> {
                       padding: EdgeInsets.all(10),
                       splashColor: Colors.teal[100],
                       onPressed: () async {
-                        Etudiant_ etd = new Etudiant_(
-                            int.parse(_matriculeController.text),
-                            _nomController.text,
-                            _prenomController.text,
-                            _sectionController.text,
-                            int.parse(_groupeController.text));
-
-                        PrimitiveWrapper data = new PrimitiveWrapper(0);
-                        await showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              BuildPopupDialog(context, data),
-                        );
-                        print(data.value);
-                        if (data.value == 1) {
-                          ref
-                              .child("Etudiants/" + etd.matricule.toString())
-                              .set({
-                            'nom': etd.nom,
-                            'prenom': etd.prenom,
-                            'section': etd.codeS,
-                            'groupe': etd.groupe.toString()
-                          });
+                        if (cher.value == 0) {
                           ShowToastComponent.showDialog(
-                              'Mise à jour faite avec succès', context);
+                              "Vous devez cherchez un etudiant avant ",
+                              context);
                         } else {
-                          ShowToastComponent.showDialog(
-                              'Mise à jour annulée', context);
+                          Etudiant_ etd = new Etudiant_(
+                              int.parse(_matriculeController.text),
+                              _nomController.text,
+                              _prenomController.text,
+                              _sectionController.text,
+                              int.parse(_groupeController.text));
+
+                          PrimitiveWrapper data = new PrimitiveWrapper(0);
+
+                          if (etd.matricule.toString() != mattemp.value) {
+                            print(mattemp.value.toString() +
+                                " " +
+                                etd.matricule.toString());
+                            DataSnapshot snapshot = await ref
+                                .child('Etudiants/' + _matriculeController.text)
+                                .once();
+                            if (snapshot.value == null) {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    BuildPopupDialog(context, data),
+                              );
+                              print(mattemp.value);
+                              ref
+                                  .child(
+                                      "Etudiants/" + mattemp.value.toString())
+                                  .remove();
+                              if (data.value == 1) {
+                                ref
+                                    .child(
+                                        "Etudiants/" + mattemp.value.toString())
+                                    .remove();
+                                ref
+                                    .child(
+                                        "Etudiants/" + etd.matricule.toString())
+                                    .set({
+                                  'nom': etd.nom,
+                                  'prenom': etd.prenom,
+                                  'section': etd.codeS,
+                                  'groupe': etd.groupe.toString()
+                                });
+                                _matriculeController.text = "";
+                                _nomController.text = "";
+                                _prenomController.text = "";
+                                _sectionController.text = "";
+                                _groupeController.text = "";
+                                cher.value = 0;
+                                ShowToastComponent.showDialog(
+                                    'Mise à jour faite avec succès', context);
+                              } else {
+                                ShowToastComponent.showDialog(
+                                    'Mise à jour annulée', context);
+                              }
+                            } else {
+                              ShowToastComponent.showDialog(
+                                  "Matricule existe déjà", context);
+                            }
+                          } else {
+                            await showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  BuildPopupDialog(context, data),
+                            );
+                            if (data.value == 1) {
+                              ref
+                                  .child(
+                                      "Etudiants/" + etd.matricule.toString())
+                                  .set({
+                                'nom': etd.nom,
+                                'prenom': etd.prenom,
+                                'section': etd.codeS,
+                                'groupe': etd.groupe.toString()
+                              });
+                              _matriculeController.text = "";
+                              _nomController.text = "";
+                              _prenomController.text = "";
+                              _sectionController.text = "";
+                              _groupeController.text = "";
+                              cher.value = 0;
+                              ShowToastComponent.showDialog(
+                                  'Mise à jour faite avec succès', context);
+                            } else {
+                              ShowToastComponent.showDialog(
+                                  'Mise à jour annulée', context);
+                            }
+                          }
                         }
                       },
                       child: Text(
